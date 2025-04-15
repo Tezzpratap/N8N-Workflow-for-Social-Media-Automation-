@@ -1,6 +1,3 @@
-Certainly! Here’s a structured Markdown format for your N8N workflow for social media automation:
-
-```markdown
 # N8N Workflow for Social Media Automation
 
 ## Overview
@@ -44,11 +41,7 @@ This N8N workflow automates social media posting by integrating various platform
    - Connect the output of the AI generation nodes to your social media posting nodes for automatic uploads.
 
 ## Note
-Make sure to test each part of the workflow to confirm connections are working properly and that content is posting correctly on the social media platforms.
+Make sure to test each part of the workflow to confirm that connections are working properly and that content is posting correctly on the social media platforms.
 
 ## Support
-For assistance or questions, please reach out through (insert contact or support link).
-
-```
-
-Feel free to modify any sections or details as required! Let me know if you need further adjustments or additional information.
+For assistance or questions, please reach out through my Email - tezzz30@gmail.com.
