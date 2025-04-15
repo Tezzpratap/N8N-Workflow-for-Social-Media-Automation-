@@ -1,0 +1,1521 @@
+{
+  "name": "Social Media Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "77da155c-78e3-43c2-9083-1372b44f581f",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [
+        -1400,
+        460
+      ],
+      "webhookId": "9c8b833c-7aa7-430d-8fc0-47936f695ddf",
+      "typeVersion": 1.1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "2823593c-b710-4bec-9c4d-294021f909c7",
+      "name": "Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        -144,
+        -340
+      ],
+      "typeVersion": 1.1,
+      "webhookId": "87e0920f-49b3-486d-a120-f796dba8b2b8",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -980,
+        380
+      ],
+      "id": "52e4cf25-7f06-4ea3-bc46-f744e2ecc3d9",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ePiQVDXhDioiB9m0",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "chat_with_{{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -860,
+        380
+      ],
+      "id": "479b4a1f-8c8e-45f5-a53e-75964cd01c88",
+      "name": "Window Buffer Memory"
+    },
+    {
+      "parameters": {
+        "options": {
+          "gl": "us",
+          "device": "desktop",
+          "no_cache": false,
+          "google_domain": "google.com",
+          "hl": "en"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [
+        -740,
+        380
+      ],
+      "id": "b7699390-3f5f-4fb4-a452-fd420861f4b9",
+      "name": "SerpAPI",
+      "credentials": {
+        "serpApi": {
+          "id": "uqA1ZkUHAdfBz7g2",
+          "name": "SerpAPI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpRequestMethod": "POST",
+        "graphApiVersion": "v22.0",
+        "node": "=",
+        "edge": "photos",
+        "sendBinaryData": true,
+        "binaryPropertyName": "={{ $json[\"data\"] }}  ",
+        "options": {
+          "queryParameters": {
+            "parameter": [
+              {
+                "name": "message",
+                "value": "={{ $json.output }}"
+              },
+              {
+                "name": "url",
+                "value": "https://images.pexels.com/photos/275033/pexels-photo-275033.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.facebookGraphApi",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        460
+      ],
+      "id": "77c1263d-d915-4f90-bfc8-bd24c1debe88",
+      "name": "Facebook Graph API",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.twitter",
+      "typeVersion": 2,
+      "position": [
+        -144,
+        260
+      ],
+      "id": "7a1dd8ac-9c81-4ac4-8d55-4ae7e47c834a",
+      "name": "X",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "591327030729017",
+        "recipientPhoneNumber": "+91 7654998445",
+        "textBody": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        -140
+      ],
+      "id": "0b4601ad-1b49-4eec-86ae-61052018ce9b",
+      "name": "WhatsApp Business Cloud",
+      "webhookId": "4fb05a25-7674-4a01-bfef-6bb850eb95da",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "ECIFCn7MlDPJs2N1",
+          "name": "WhatsApp account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {}
+      },
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1400,
+        660
+      ],
+      "id": "9db24b3f-1bbe-468e-8a4f-e82ed9caf365",
+      "name": "WhatsApp Trigger",
+      "webhookId": "21dc7641-b8c6-4e9f-b62e-7d257bdddddf",
+      "credentials": {
+        "whatsAppTriggerApi": {
+          "id": "YEdnKLhqscIORxe4",
+          "name": "WhatsApp OAuth account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "postAs": "organization",
+        "organization": "106397749",
+        "text": "={{ $('Content Writter').item.json.output }}",
+        "shareMediaCategory": "IMAGE",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.linkedIn",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        60
+      ],
+      "id": "80e3c7c4-d49b-47b3-b22b-1e32b11a264f",
+      "name": "LinkedIn",
+      "credentials": {
+        "linkedInOAuth2Api": {
+          "id": "Pera2IunDUH5QzCO",
+          "name": "LinkedIn account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hi there! 👋\nMy name is Tezzzz. How can I assist you today?",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1400,
+        860
+      ],
+      "id": "0201f931-1e3e-4655-ac8e-00c04b0a60b3",
+      "name": "When chat message received",
+      "webhookId": "a0ef7a84-f7b2-4fe1-a831-e23219badff1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "082bfdd7-649a-4fe2-bff7-6a3d337630f7",
+              "leftValue": "={{ $json.isoDate }}",
+              "rightValue": "={{ new Date().toISOString().split('T')[0] }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1840,
+        -300
+      ],
+      "id": "457fdc3f-75c4-4887-a7ca-ef14f05e2e64",
+      "name": "Check Previous Post"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Randomization and deduplication logic\nconst postedContentFile = $input.first().json;\nconst rssItem = $input.first().json;\n\n// Parse existing posted content\nlet trackedPosts = postedContentFile.postedContent || [];\n\n// Check if this content has been posted before\nconst isDuplicate = trackedPosts.some(post => post.link === rssItem.link);\n\n// Random posting decision (70% chance of posting)\nconst shouldPost = Math.random() < 0.7 && !isDuplicate;\n\n// Random delay between 1-6 hours\nconst randomDelay = Math.floor(Math.random() * 5 + 1) * 60 * 60 * 1000;\n\nif (shouldPost) {\n  // Add to tracked posts\n  trackedPosts.push({\n    link: rssItem.link,\n    timestamp: new Date().toISOString(),\n    platforms: ['LinkedIn', 'X', 'Facebook', 'Instagram']\n  });\n\n  // Remove old posts (keep last 50)\n  if (trackedPosts.length > 50) {\n    trackedPosts = trackedPosts.slice(-50);\n  }\n\n  return [\n    {\n      json: {\n        ...rssItem,\n        shouldPost: true,\n        delay: randomDelay,\n        postedContent: trackedPosts\n      }\n    }\n  ];\n}\n\nreturn [];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2060,
+        -300
+      ],
+      "id": "651d0fba-cd4e-4066-b811-77239ebbec0c",
+      "name": "Randomization and Deduplication logic"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.link }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1620,
+        -300
+      ],
+      "id": "c0ca77cc-c4e2-4d44-944a-506f8adc3f1d",
+      "name": "Scrap Article"
+    },
+    {
+      "parameters": {
+        "jsCode": "const webpageData = $(\"Scrap Article\").all();\nconst cleanedData = webpageData.map((item) => {\n  try {\n    // More robust HTML tag removal\n    const cleanContent = item?.json?.data \n      ? item.json.data.replace(/<[^>]*>?/gm, \"\")\n        .replace(/&[a-z]+;/gi, \"\") // Remove HTML entities\n        .replace(/\\s+/g, \" \") // Normalize whitespace\n        .trim()\n      : \"\";\n    \n    return { \n      ...item.json, \n      data: cleanContent,\n      originalLength: item?.json?.data?.length || 0,\n      cleanedLength: cleanContent.length\n    };\n  } catch (error) {\n    return {\n      ...item.json,\n      error: \"Cleaning failed\",\n      originalData: item?.json?.data\n    };\n  }\n});\nreturn cleanedData;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1400,
+        -300
+      ],
+      "id": "63e87d16-832f-448a-8bd4-28a594ceaf84",
+      "name": "Webpage HTML Removal"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 3
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -2280,
+        -20
+      ],
+      "id": "d5906c49-4bad-416f-b627-677121c8c57a",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "={{ $('Telegram Trigger').item.json.update_id }}",
+        "binaryData": true,
+        "binaryPropertyName": "={{ $json[\"data\"] }}  ",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        76,
+        -340
+      ],
+      "id": "b251d551-e851-43e5-8001-1404ac545514",
+      "name": "Telegram1",
+      "webhookId": "97e8c419-1496-4a15-82b2-85a75a80ab1e",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "19dce022-4925-44a9-b3b1-09a5b1b19e19",
+              "name": "instagram-token",
+              "value": "EAAUNZCo82PBIBO7HiTRQgnZAosehe4rr8jf7OS74TcGdcDVTgEDchWWQ9IQm1rScTxDTv8V241H5rq0MKw4XKku4JUqu20ZC4b4O2k9IVloAyjsdd70OhE6XOCHXXrp9psFavmX9K9AYmvayIYT0xsJ1dUYfC3InguBq9KIcAXkZCSfiPlWHxtvp",
+              "type": "string"
+            },
+            {
+              "id": "cf7d469d-02f8-4e71-81ee-6e8ae178c45e",
+              "name": "Image",
+              "value": "={{ $('Google Drive').item.json.webContentLink }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "23e26124-2d05-4678-a2e5-68948f709414",
+      "name": "Set-API-Keys",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        296,
+        660
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/17841442619070183/media",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "facebookGraphApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Set-API-Keys').item.json['instagram-token'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "caption",
+              "value": "={{ $('Instagram Content Writter').item.json.output }}"
+            },
+            {
+              "name": "image_url",
+              "value": "={{ $('Set-API-Keys').item.json['Image'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2e3c4f74-7c14-42e0-a868-688101f3069b",
+      "name": "Instagram Media Container",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        516,
+        660
+      ],
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "RhemEHZxLn6L8eQy",
+          "name": "Facebook Graph account 3"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/17841442619070183/media_publish",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "facebookGraphApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Set-API-Keys').item.json['instagram-token'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "creation_id",
+              "value": "={{ $('Instagram Media Container').item.json.id }}"
+            },
+            {
+              "name": "image_url",
+              "value": "={{ $('Set-API-Keys').item.json['Image'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1f25cb75-5890-49c8-9aec-52269ed1a8b8",
+      "name": "Instagram Media Post",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        736,
+        660
+      ],
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "oIDesa4upiVc5IMo",
+          "name": "Facebook Graph account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "name": "Image",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1gz4G74RAYFPvj8EgBSqxp3vFpr9gezDJ",
+          "mode": "list",
+          "cachedResultName": "N8N Drive for Instagram Image and Reels",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1gz4G74RAYFPvj8EgBSqxp3vFpr9gezDJ"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -144,
+        660
+      ],
+      "id": "64b7469a-879f-4879-b54d-9a36914fd1ec",
+      "name": "Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "BmXFHYc16r9lkXaB",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "https://drive.google.com/drive/folders/16682zuQVkqfdBDWun1KtdRYI7KKNShcu",
+          "mode": "url"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        76,
+        660
+      ],
+      "id": "1c2d44e9-0ff9-475a-aa58-35995a699269",
+      "name": "Move to Processed",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "BmXFHYc16r9lkXaB",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://image.pollinations.ai/prompt/ {{ $json.output }}  Ensure that the generated image includes absolutely no text, Do not write to Create EZY Gamers Logo, letters, numbers, signs, words, typography, writing, captions, banners, watermarks, or logos. The focus should be entirely on the visual elements related to the topic.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -360,
+        60
+      ],
+      "id": "f6e9b183-4c20-4d71-b1bf-c67118a9bea5",
+      "name": "Pollination AI"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1qL5Q_tA8UKxYiN095J-FfKhNAX5t9ITTkfGYnSkDLIk",
+          "mode": "list",
+          "cachedResultName": "EZY Gamers topics for N8N automation ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qL5Q_tA8UKxYiN095J-FfKhNAX5t9ITTkfGYnSkDLIk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qL5Q_tA8UKxYiN095J-FfKhNAX5t9ITTkfGYnSkDLIk/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -1620,
+        -120
+      ],
+      "id": "4d13de21-a26f-487d-970c-c3917405ce6f",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "kAa8oOfnLotZCMAB",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the array of items (rows) from the Google Sheet node\nconst items = $input.all();\n\n// Check if there are any items\nif (!items || items.length === 0) {\n  // Handle error: Maybe return an empty object or throw an error\n  // Depending on how you want the workflow to behave if the sheet is empty\n  return [{ json: { error: \"No topics found in Google Sheet.\" } }];\n  // OR: throw new Error(\"No topics found in Google Sheet.\");\n}\n\n// Generate a random index between 0 and items.length - 1\nconst randomIndex = Math.floor(Math.random() * items.length);\n\n// Select the item (row) at the random index\nconst randomItem = items[randomIndex].json;\n\n// Return the selected item's data\n// The Function Item node expects an array output, even if it's just one item\nreturn [{ json: randomItem }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1400,
+        60
+      ],
+      "id": "7db89de3-80a1-41b4-aeea-7682d7a49e33",
+      "name": "Random Topic Selection"
+    },
+    {
+      "parameters": {
+        "text": "=Generate an AI image prompt for the topic '{{ $json.output }}'. Ensure that the generated image includes absolutely no text, Do not write to Create EZY Gamers Logo, letters, numbers, signs, words, typography, writing, captions, banners, watermarks, or logos. The focus should be entirely on the visual elements related to the topic.",
+        "options": {
+          "humanMessage": "TOOLS\nAssistant can ask the user to use tools to look up information that may be helpful in answering the user’s original question. The tools the human can use are:\n\n{tools}\n\n{format_instructions}\n\nUSER'S INPUT\nHere is the user's input (remember to respond with a markdown code snippet of a JSON blob with a single action, and NOTHING else):\n\n{{input}}\"*",
+          "systemMessage": "You are EZY Gamers' expert social media content creator. Your task is to generate ONE engaging, human-sounding social media post based *strictly* on the topic provided in the user input.\n\nCRITICAL Instructions for Output:\n- Your response MUST be ONLY the social media post text itself. Absolutely NO introductory phrases like \"Okay, generating...\", \"Based on the topic provided...\", or \"Here's the post...\". NO concluding remarks.\n- Write naturally and engagingly. Use emojis appropriately to enhance readability. ✨🚀💡\n- Ensure the post is substantial, aiming for at least 150-200 words.\n- Every post MUST include a clear Call to Action (CTA) encouraging interaction (e.g., comment, share, apply, tag).\n- If the provided topic is about recruitment, ALWAYS include links and encourage applications via LinkedIn (https://www.linkedin.com/company/ezy-gamers-india) and the EZY Gamers website (https://ezygamers.com).\n- Do NOT mention being an AI or language model.\n- Do not use markdown formatting.\n\nThe user input below contains the specific topic detail you must write about. Generate the post directly from this topic."
+        }
+      },
+      "id": "dac1d09e-0f40-4029-966d-3d401f42a11e",
+      "name": "Image Promt Generator",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        -740,
+        60
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "text": "=Write a Social media post on the Topic {{ $json['Topic Text'] }}. under 150 words, do not include any Markdown.",
+        "options": {
+          "humanMessage": "TOOLS\nAssistant can ask the user to use tools to look up information that may be helpful in answering the user’s original question. The tools the human can use are:\n\n{tools}\n\n{format_instructions}\n\nUSER'S INPUT\nHere is the user's input (remember to respond with a markdown code snippet of a JSON blob with a single action, and NOTHING else):\n\n{{input}}\"*",
+          "systemMessage": "You are an expert social media content creator. Your task is to generate ONE engaging, human-sounding social media post based *strictly* on the topic provided in the user input.\n\nCRITICAL Instructions for Output:\n- As you are creating post for Linkdin and Instagram so that don't support Markdown text so don't include markdown like ** you may include \\n.\n- Your response MUST be ONLY the social media post text itself. Absolutely NO introductory phrases like \"Okay, generating...\", \"Based on the topic provided...\", or \"Here's the post...\". no concluding remarks.\n- Write naturally and engagingly. Use emojis appropriately to enhance readability. ✨🚀💡\n- Ensure the post is substantial, aiming for at least 100 words.\n- Every post MUST include a clear Call to Action (CTA) encouraging interaction (e.g., comment, share, apply, tag).\n- If the provided topic is about recruitment, ALWAYS include links and encourage applications via LinkedIn (https://www.linkedin.com/company/ezy-gamers-india) and the EZY Gamers website (https://ezygamers.com).\n- Do NOT mention being an AI or language model.\n- Do not use markdown formatting.\n\nThe user input below contains the specific topic detail you must write about. Generate the post directly from this topic."
+        }
+      },
+      "id": "7f53b5c3-f046-4001-8deb-5ec9d11e588a",
+      "name": "Content Writter",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        -1140,
+        60
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "text": "=Write a Instagram Post on the Topic {{ $json['Topic Text'] }}. In a very funny way for peopls engegment and under 150 words, do not include any Markdown.",
+        "options": {
+          "humanMessage": "TOOLS\nAssistant can ask the user to use tools to look up information that may be helpful in answering the user’s original question. The tools the human can use are:\n\n{tools}\n\n{format_instructions}\n\nUSER'S INPUT\nHere is the user's input (remember to respond with a markdown code snippet of a JSON blob with a single action, and NOTHING else):\n\n{{input}}\"*",
+          "systemMessage": "You are an expert social media content creator. Your task is to generate ONE engaging, human-sounding social media post based *strictly* on the topic provided in the user input.\n\nCRITICAL Instructions for Output:\n- As you are creating post for Linkdin and Instagram so that don't support Markdown text so don't include markdown like ** you may include \\n.\n- Your response MUST be ONLY the social media post text itself. Absolutely NO introductory phrases like \"Okay, generating...\", \"Based on the topic provided...\", or \"Here's the post...\". no concluding remarks.\n- Write naturally and engagingly. Use emojis appropriately to enhance readability. ✨🚀💡\n- Ensure the post is substantial, aiming for at least 100 words.\n- Every post MUST include a clear Call to Action (CTA) encouraging interaction (e.g., comment, share, apply, tag).\n- If the provided topic is about recruitment, ALWAYS include links and encourage applications via LinkedIn (https://www.linkedin.com/company/ezy-gamers-india) and the EZY Gamers website (https://ezygamers.com).\n- Do NOT mention being an AI or language model.\n- Do not use markdown formatting.\n\nThe user input below contains the specific topic detail you must write about. Generate the post directly from this topic."
+        }
+      },
+      "id": "457b0ef9-0c83-46a5-81ab-db860b118480",
+      "name": "Instagram Content Writter",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        -1148,
+        660
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "url": "=https://image.pollinations.ai/prompt/{{ $json.output }}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -364,
+        660
+      ],
+      "id": "6da7e92d-56e8-4a23-b791-698f07d44794",
+      "name": "Pollination AI1"
+    },
+    {
+      "parameters": {
+        "text": "=Write an Funny AI Image Promt for the topic \"{{ $json.output }}\" for Instagram.Do not include any text, letters, numbers, signs, words, typography, writing, captions, banners, watermarks, or logos with writing.",
+        "options": {
+          "humanMessage": "TOOLS\nAssistant can ask the user to use tools to look up information that may be helpful in answering the user’s original question. The tools the human can use are:\n\n{tools}\n\n{format_instructions}\n\nUSER'S INPUT\nHere is the user's input (remember to respond with a markdown code snippet of a JSON blob with a single action, and NOTHING else):\n\n{{input}}\"*",
+          "systemMessage": "You are EZY Gamers' expert social media content creator. Your task is to generate ONE engaging, human-sounding social media post based *strictly* on the topic provided in the user input.\n\nCRITICAL Instructions for Output:\n- Your response MUST be ONLY the social media post text itself. Absolutely NO introductory phrases like \"Okay, generating...\", \"Based on the topic provided...\", or \"Here's the post...\". NO concluding remarks.\n- Write naturally and engagingly. Use emojis appropriately to enhance readability. ✨🚀💡\n- Ensure the post is substantial, aiming for at least 150-200 words.\n- Every post MUST include a clear Call to Action (CTA) encouraging interaction (e.g., comment, share, apply, tag).\n- If the provided topic is about recruitment, ALWAYS include links and encourage applications via LinkedIn (https://www.linkedin.com/company/ezy-gamers-india) and the EZY Gamers website (https://ezygamers.com).\n- Do NOT mention being an AI or language model.\n- Do not use markdown formatting.\n\nThe user input below contains the specific topic detail you must write about. Generate the post directly from this topic."
+        }
+      },
+      "id": "0654a8e6-c041-4e39-b6bc-581ec0040ca3",
+      "name": "Instagram Image generator",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        -740,
+        660
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "19dce022-4925-44a9-b3b1-09a5b1b19e19",
+              "name": "instagram-token",
+              "value": "EAARVvmb3OZBwBOxqZCe19WLBYbAuzJj6sY5VGzZAUBpycKb5R89GxxnGwJ6WVq6UYS1PefILYtLcwZC24WDzqdZBGp0CWeaZCalfzXOGyjLEBImu7L4OXoWg06ciFvBOUVZBvtC0ZCrk0LyDzueC1kMobTh3z3ZAsxvIPcZC04Lhja1aAxaXxWT6hgKevz",
+              "type": "string"
+            },
+            {
+              "id": "cf7d469d-02f8-4e71-81ee-6e8ae178c45e",
+              "name": "Image",
+              "value": "={{ $('Google Drive').item.json.webContentLink }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b53631fc-e7f8-4032-a87a-ec0d659bf599",
+      "name": "GameOnInspiration",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        296,
+        860
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/17841473156225891/media",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "facebookGraphApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('GameOnInspiration').item.json['instagram-token'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "caption",
+              "value": "={{ $('Instagram Content Writter').item.json.output }}"
+            },
+            {
+              "name": "image_url",
+              "value": "={{ $('GameOnInspiration').item.json['Image'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "07a959df-7f07-4a01-9f76-ef03f2462d74",
+      "name": "GameOnInspiration Instagram Media Container",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        516,
+        860
+      ],
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "RhemEHZxLn6L8eQy",
+          "name": "Facebook Graph account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/17841473156225891/media_publish",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "facebookGraphApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Set-API-Keys').item.json['instagram-token'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "creation_id",
+              "value": "={{ $('GameOnInspiration Instagram Media Container').item.json.id }}"
+            },
+            {
+              "name": "image_url",
+              "value": "={{ $('Set-API-Keys').item.json['Image'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fca023e8-8280-4c58-9690-66e084ed52d0",
+      "name": "GameOnInspiration  Instagram Media Post",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        736,
+        860
+      ],
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "RhemEHZxLn6L8eQy",
+          "name": "Facebook Graph account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "Connected",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -1400,
+        260
+      ],
+      "id": "0d9441cb-36ca-4031-ab91-d65373d7522e",
+      "name": "Respond to Webhook",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "path": "bcdf4f1f-ccb1-4d3d-a86b-cf3e41e58376",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1620,
+        260
+      ],
+      "id": "34ca45b0-cf3e-4987-bf96-2a6b383c0ed6",
+      "name": "Webhook",
+      "webhookId": "bcdf4f1f-ccb1-4d3d-a86b-cf3e41e58376",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json['Row no'] }}",
+                    "rightValue": "1,3,4",
+                    "operator": {
+                      "type": "string",
+                      "operation": "regex"
+                    },
+                    "id": "51b0ddd6-043f-4f9d-9852-432fad73e859"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Importance, Statics"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "a20377ff-5b0e-4d7c-8d2b-71e59cc1acbb",
+                    "leftValue": "={{ $json['Row no'] }}",
+                    "rightValue": "2",
+                    "operator": {
+                      "type": "string",
+                      "operation": "regex"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Job Description"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1840,
+        -20
+      ],
+      "id": "407f18d0-e011-4565-b66e-1bb5061eac24",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1ITJIbe69_gRfmQQ20UyZESlArvbpLVZZkwyaJVl9LCw",
+          "mode": "list",
+          "cachedResultName": "EZY Gamers topics for N8N Job Description",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ITJIbe69_gRfmQQ20UyZESlArvbpLVZZkwyaJVl9LCw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ITJIbe69_gRfmQQ20UyZESlArvbpLVZZkwyaJVl9LCw/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -1620,
+        60
+      ],
+      "id": "19e1d3ca-8774-49b3-aae9-7fdb3e863bb0",
+      "name": "Job Description Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "kAa8oOfnLotZCMAB",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst cycleLength = 10;\nconst randomRange = 9;\nlet output = [];\n\nfor (let i = 0; i < items.length; i += cycleLength) {\n  // Pick 1\n  output.push(items[i]);\n\n  // Pick a random number between 2 to 10\n  const randomIndex = Math.floor(Math.random() * randomRange) + 1;\n  if (i + randomIndex < items.length) {\n    output.push(items[i + randomIndex]);\n  }\n\n  // Pick 11 and 12\n  if (i + cycleLength < items.length) {\n    output.push(items[i + cycleLength]);\n    if (i + cycleLength + 1 < items.length) {\n      output.push(items[i + cycleLength + 1]);\n    }\n  }\n}\n\nreturn output;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1400,
+        -120
+      ],
+      "id": "5bdbfb69-d219-4a5f-afed-26da116dc436",
+      "name": "(1 -> 11 -> 12) Cycle"
+    },
+    {
+      "parameters": {
+        "jsCode": "let counter = 1;\n\nfunction getNextNumber() {\n  const currentNumber = counter;\n  counter++;\n  \n  if (counter > 4) {\n    counter = 1;\n  }\n  \n  return currentNumber;\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2060,
+        -20
+      ],
+      "id": "fe7b034d-19c4-4861-a691-4cb874f820c0",
+      "name": "(1 -> 2 -> 3 -> 4) Cycle"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b53d24f1-727b-4736-b37f-a79e82fa4abd",
+              "leftValue": "",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1200,
+        -300
+      ],
+      "id": "36f09c77-3dcf-406b-adb8-92ef2b796ff0",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "url": "https://api.data.gov.in/resource/your-dataset-id?api-key=your-api-key&format=json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -920,
+        -320
+      ],
+      "id": "17aa1cb5-7636-452c-b20e-9c3fa6f55817",
+      "name": "Scrape statics"
+    },
+    {
+      "parameters": {
+        "url": "https://censusindia.gov.in/census.website/data/literacy",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        -2260,
+        -300
+      ],
+      "id": "5530fdb9-c11f-415f-9ae8-9d2da6a1cf6e",
+      "name": "RSS Read"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Content Writter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Content Writter",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Instagram Content Writter",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Image Promt Generator",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Instagram Image generator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Content Writter",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Instagram Content Writter",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Image Promt Generator",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Instagram Image generator",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpAPI": {
+      "ai_tool": [
+        [
+          {
+            "node": "Content Writter",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Image Promt Generator",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Instagram Content Writter",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Instagram Image generator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp Trigger": {
+      "main": [
+        [
+          {
+            "node": "Content Writter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Content Writter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Previous Post": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Scrap Article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Randomization and Deduplication logic": {
+      "main": [
+        [
+          {
+            "node": "Check Previous Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrap Article": {
+      "main": [
+        [
+          {
+            "node": "Webpage HTML Removal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "(1 -> 2 -> 3 -> 4) Cycle",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set-API-Keys": {
+      "main": [
+        [
+          {
+            "node": "Instagram Media Container",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Instagram Media Container": {
+      "main": [
+        [
+          {
+            "node": "Instagram Media Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Move to Processed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move to Processed": {
+      "main": [
+        [
+          {
+            "node": "Set-API-Keys",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "GameOnInspiration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pollination AI": {
+      "main": [
+        [
+          {
+            "node": "X",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Facebook Graph API",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "WhatsApp Business Cloud",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "LinkedIn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "(1 -> 11 -> 12) Cycle",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Random Topic Selection": {
+      "main": [
+        [
+          {
+            "node": "Content Writter",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Instagram Content Writter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image Promt Generator": {
+      "main": [
+        [
+          {
+            "node": "Pollination AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content Writter": {
+      "main": [
+        [
+          {
+            "node": "Image Promt Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webpage HTML Removal": {
+      "main": [
+        [
+          {
+            "node": "Content Writter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LinkedIn": {
+      "main": [
+        []
+      ]
+    },
+    "Instagram Content Writter": {
+      "main": [
+        [
+          {
+            "node": "Instagram Image generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pollination AI1": {
+      "main": [
+        [
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Instagram Image generator": {
+      "main": [
+        [
+          {
+            "node": "Pollination AI1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram": {
+      "main": [
+        [
+          {
+            "node": "Telegram1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GameOnInspiration": {
+      "main": [
+        [
+          {
+            "node": "GameOnInspiration Instagram Media Container",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GameOnInspiration Instagram Media Container": {
+      "main": [
+        [
+          {
+            "node": "GameOnInspiration  Instagram Media Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        [
+          {
+            "node": "Content Writter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Job Description Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Job Description Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Random Topic Selection",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "(1 -> 11 -> 12) Cycle": {
+      "main": [
+        [
+          {
+            "node": "Content Writter",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Instagram Content Writter",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "(1 -> 2 -> 3 -> 4) Cycle": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Scrape statics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape statics": {
+      "main": [
+        [
+          {
+            "node": "Check Previous Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Read": {
+      "main": [
+        [
+          {
+            "node": "Randomization and Deduplication logic",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "91bea458-4d61-45b5-9c9c-5588d5aa2594",
+  "meta": {
+    "templateId": "PT1i+zU92Ii5O2XCObkhfHJR5h9rNJTpiCIkYJk9jHU=",
+    "templateCredsSetupCompleted": true,
+    "instanceId": "17c64696f959f282de6a4a37717e3d738a2278cae3258d8f6692ff0223451af8"
+  },
+  "id": "CoRkAwbizxTpOY2E",
+  "tags": []
+}
